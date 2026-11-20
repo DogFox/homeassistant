@@ -47,3 +47,23 @@ backups/
 Thumbs.db
 home-assistant_v2.db
 home-assistant.log.old
+
+# Home Assistant runtime state
+/.ha_mcp/
+/.shopping_list.json
+
+# Editor data copied from the server
+/~/.vscode-root/
+
+# Local service files and generated assets
+/go2rtc-[0-9]*
+/go2rtc.yaml
+/test
+/www/community/**/*.js.gz
+
+# Zigbee2MQTT local configuration, credentials, and runtime data
+/zigbee2mqtt/configuration.yaml
+/zigbee2mqtt/configuration_backup_v*.yaml
+/zigbee2mqtt/coordinator_backup.json
+/zigbee2mqtt/state.json
+/zigbee2mqtt/log/
