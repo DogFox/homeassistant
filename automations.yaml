@@ -106,13 +106,9 @@
 - id: '1787748510293'
   alias: Датчик протечки под унитазом
   triggers:
-  - trigger: template
-    value_template: >-
-      {{ expand(device_entities('45e4a65dfcd6b56a72106759a5ab79a9'))
-          | selectattr('entity_id', 'match', '^binary_sensor[.]')
-          | selectattr('attributes.device_class', 'defined')
-          | selectattr('attributes.device_class', 'eq', 'moisture')
-          | selectattr('state', 'eq', 'on') | list | count > 0 }}
+  - trigger: state
+    entity_id: binary_sensor.datchik_protechki_pod_unitazom
+    to: 'on'
   actions:
   - parallel:
     - sequence:
@@ -154,13 +150,9 @@
 - id: '1787748578071'
   alias: Датчик протечки на кухне
   triggers:
-  - trigger: template
-    value_template: >-
-      {{ expand(device_entities('45e4a65dfcd6b56a72106759a5ab79a9'))
-          | selectattr('entity_id', 'match', '^binary_sensor[.]')
-          | selectattr('attributes.device_class', 'defined')
-          | selectattr('attributes.device_class', 'eq', 'moisture')
-          | selectattr('state', 'eq', 'on') | list | count > 0 }}
+  - trigger: state
+    entity_id: binary_sensor.datchik_protechki_kukhnia
+    to: 'on'
   actions:
   - parallel:
     - sequence:
@@ -202,13 +194,9 @@
 - id: '1787748608395'
   alias: Датчик протечки под раковиной
   triggers:
-  - trigger: template
-    value_template: >-
-      {{ expand(device_entities('45e4a65dfcd6b56a72106759a5ab79a9'))
-          | selectattr('entity_id', 'match', '^binary_sensor[.]')
-          | selectattr('attributes.device_class', 'defined')
-          | selectattr('attributes.device_class', 'eq', 'moisture')
-          | selectattr('state', 'eq', 'on') | list | count > 0 }}
+  - trigger: state
+    entity_id: binary_sensor.datchik_protechki_pod_rakovinoi
+    to: 'on'
   actions:
   - parallel:
     - sequence:
