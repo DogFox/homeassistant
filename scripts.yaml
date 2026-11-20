@@ -41,7 +41,10 @@ leak_turn_off_relay:
       data:
         title: Не подтверждено отключение реле при протечке
         message: "Обнаружена протечка {{ location }}. Проверьте положение крана вручную."
-    - action: telegram_bot.send_message
+    - action: notify.send_message
+      target:
+        entity_id:
+        - notify.telegram_bot_7420407717_299057544
+        - notify.telegram_bot_7420407717_310816124
       data:
-        chat_id: !secret telegram_household_chat_ids
         message: "Протечка {{ location }}. Реле не подтвердило отключение, проверьте кран."

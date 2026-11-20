@@ -55,9 +55,12 @@
     to:
     trigger: state
   actions:
-  - action: telegram_bot.send_message
+  - action: notify.send_message
+    target:
+      entity_id:
+      - notify.telegram_bot_7420407717_299057544
+      - notify.telegram_bot_7420407717_310816124
     data:
-      chat_id: !secret telegram_household_chat_ids
       message: Мастер выключатель был использован
 - id: '1756475470122'
   alias: Вытяжка со светом
@@ -117,9 +120,12 @@
         data:
           location: под унитазом
     - sequence:
-      - action: telegram_bot.send_message
+      - action: notify.send_message
+        target:
+          entity_id:
+          - notify.telegram_bot_7420407717_299057544
+          - notify.telegram_bot_7420407717_310816124
         data:
-          chat_id: !secret telegram_household_chat_ids
           message: Обнаружена протечка под унитазом
   mode: single
 - id: '1787748563428'
@@ -137,9 +143,12 @@
         data:
           location: в котельной
     - sequence:
-      - action: telegram_bot.send_message
+      - action: notify.send_message
+        target:
+          entity_id:
+          - notify.telegram_bot_7420407717_299057544
+          - notify.telegram_bot_7420407717_310816124
         data:
-          chat_id: !secret telegram_household_chat_ids
           message: Обнаружена протечка в котельной
   mode: single
 - id: '1787748578071'
@@ -159,9 +168,12 @@
         data:
           location: на кухне
     - sequence:
-      - action: telegram_bot.send_message
+      - action: notify.send_message
+        target:
+          entity_id:
+          - notify.telegram_bot_7420407717_299057544
+          - notify.telegram_bot_7420407717_310816124
         data:
-          chat_id: !secret telegram_household_chat_ids
           message: Обнаружена протечка на кухне
   mode: single
 - id: '1787748593427'
@@ -179,9 +191,12 @@
         data:
           location: под ванной
     - sequence:
-      - action: telegram_bot.send_message
+      - action: notify.send_message
+        target:
+          entity_id:
+          - notify.telegram_bot_7420407717_299057544
+          - notify.telegram_bot_7420407717_310816124
         data:
-          chat_id: !secret telegram_household_chat_ids
           message: Обнаружена протечка под ванной
   mode: single
 - id: '1787748608395'
@@ -201,9 +216,12 @@
         data:
           location: под раковиной
     - sequence:
-      - action: telegram_bot.send_message
+      - action: notify.send_message
+        target:
+          entity_id:
+          - notify.telegram_bot_7420407717_299057544
+          - notify.telegram_bot_7420407717_310816124
         data:
-          chat_id: !secret telegram_household_chat_ids
           message: Обнаружена протечка под раковиной
   mode: single
 - id: '1789406718654'
