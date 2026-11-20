@@ -1,0 +1,386 @@
+- id: '1729788712454'
+  alias: Архитектурная и гирлянда подсветка Вкл
+  description: Включаем уличный свет если освещенности ниже 10
+  triggers:
+  - type: illuminance
+    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
+    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
+    domain: sensor
+    trigger: device
+    below: 5
+  conditions:
+  - condition: time
+    before: '12:00:00'
+    after: 09:00:00
+    enabled: false
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.lumi_acn018_471c_switch_status
+      - switch.lumi_acn018_471c_switch_status_3
+  mode: single
+- id: '1729788857533'
+  alias: Архитектурный свет и гирлянда Выкл
+  description: Выключаем уличный свет в 24 часа
+  triggers:
+  - type: illuminance
+    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
+    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
+    domain: sensor
+    trigger: device
+    above: 10
+  - trigger: time
+    at: '23:00:00'
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.lumi_acn018_471c_switch_status
+      - switch.lumi_acn018_471c_switch_status_3
+  mode: single
+- id: '1733600152141'
+  alias: Выключить гирлянду в 23
+  description: Выключаем уличный свет в 24 часа
+  triggers:
+  - type: illuminance
+    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
+    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
+    domain: sensor
+    trigger: device
+    above: 10
+  - trigger: time
+    at: '23:00:00'
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 14dfaad59948a7ffd60610be2e9ffa22
+    entity_id: 82509dec86272ef020197cb142def876
+    domain: switch
+  - type: turn_off
+    device_id: 7d3610704dae1cee88952f3eb412538b
+    entity_id: 926e3cfb8d36aae19124c7ab2e207ac2
+    domain: switch
+  mode: single
+- id: '1738042134617'
+  alias: ВКЛ Архитектурный свет
+  description: Включаем уличный свет если освещенности ниже 10
+  triggers:
+  - type: illuminance
+    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
+    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
+    domain: sensor
+    trigger: device
+    below: 5
+  - trigger: sun
+    event: sunset
+    offset: 0
+  conditions:
+  - condition: time
+    before: '12:00:00'
+    after: 09:00:00
+    enabled: false
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.lumi_acn018_471c_switch_status_3
+  mode: single
+- id: '1738042171972'
+  alias: ВЫКЛ Архитектурный свет
+  description: Выключаем уличный свет в 24 часа
+  triggers:
+  - type: illuminance
+    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
+    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
+    domain: sensor
+    trigger: device
+    above: 10
+  - trigger: time
+    at: '23:00:00'
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.lumi_acn018_471c_switch_status_3
+  mode: single
+- id: '1738830232810'
+  alias: Переключить свет
+  description: ''
+  triggers:
+  - device_id: 874103ddee02ca9a5b3515e562a66ac4
+    domain: zha
+    type: remote_button_short_press
+    subtype: left
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 717ed91023846563d6284906d96b48d3
+    entity_id: 7db1aed842b941a15e00ff44b644cd70
+    domain: light
+  mode: single
+- id: Мастер_выключатель_телеграм
+  alias: kill_swithc_tg
+  description: Отслеживаем мастер выключатель
+  triggers:
+  - entity_id:
+    - switch.lumi_lumi_switch_b1nacn02_vykliuchatel_2
+    to:
+    trigger: state
+  actions:
+  - action: notify.denis
+    data:
+      message: Мастер выключатель был использован
+      data: {}
+  - action: notify.tanya
+    data:
+      message: Мастер выключатель был использован
+      data: {}
+- id: '1756475470122'
+  alias: Вкл вытяжку со светом
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: caef9452b370e68fd0bfdbd03502ae0e
+    entity_id: 11c8553a857d658097034165cff3efd6
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: caef9452b370e68fd0bfdbd03502ae0e
+    entity_id: 21c9cfe8783fd69d740354df9027b688
+    domain: switch
+  mode: single
+- id: '1756475569009'
+  alias: Выкл вытяжку через 5 мин после света
+  description: ''
+  triggers:
+  - type: turned_off
+    device_id: caef9452b370e68fd0bfdbd03502ae0e
+    entity_id: 11c8553a857d658097034165cff3efd6
+    domain: switch
+    trigger: device
+  conditions: []
+  actions:
+  - delay:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: caef9452b370e68fd0bfdbd03502ae0e
+    entity_id: 21c9cfe8783fd69d740354df9027b688
+    domain: switch
+  mode: single
+- id: '1787748510293'
+  alias: Датчик протечки под унитазом
+  description: ''
+  triggers:
+  - device_id: ba5e3a929461bfce20c90f1df2054f7b
+    domain: zha
+    type: device_offline
+    subtype: device_offline
+    metadata: {}
+    trigger: device
+  conditions: []
+  actions:
+  - action: notify.denis
+    metadata: {}
+    data:
+      message: Сработка датчика протечки под унитазом
+  - action: notify.tanya
+    metadata: {}
+    data:
+      message: Сработка датчика протечки под унитазом
+  - type: turn_off
+    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+    entity_id: 871d234e83d558a72f943c21ad4fc4f6
+    domain: switch
+  mode: single
+- id: '1787748563428'
+  alias: Датчик протечки котельной
+  description: ''
+  triggers:
+  - type: moist
+    device_id: 9ebb055c16a78fcdc35543130a2f94ce
+    entity_id: 0bfb8af87baf8fbadea707177e735632
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - action: notify.denis
+    metadata: {}
+    data:
+      message: Сработка датчика протечки в котельной
+  - action: notify.tanya
+    metadata: {}
+    data:
+      message: Сработка датчика протечки котельной
+  - type: turn_off
+    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+    entity_id: 871d234e83d558a72f943c21ad4fc4f6
+    domain: switch
+  mode: single
+- id: '1787748578071'
+  alias: Датчик протечки на кухне
+  description: ''
+  triggers:
+  - device_id: 2aedcdb52827506b3ac8b1f4fd62a486
+    domain: zha
+    type: device_offline
+    subtype: device_offline
+    metadata: {}
+    trigger: device
+  conditions: []
+  actions:
+  - action: notify.denis
+    metadata: {}
+    data:
+      message: Сработка датчика протечки на кухне
+  - action: notify.tanya
+    metadata: {}
+    data:
+      message: Сработка датчика протечки на кухне
+  - type: turn_off
+    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+    entity_id: 871d234e83d558a72f943c21ad4fc4f6
+    domain: switch
+  mode: single
+- id: '1787748593427'
+  alias: Датчик протечки под ванной
+  description: ''
+  triggers:
+  - type: moist
+    device_id: 0e736b1a32c8779fdd3280f0336da661
+    entity_id: 09b89103e93aa2b1f33350fdbb9c3d27
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - action: notify.denis
+    metadata: {}
+    data:
+      message: Сработка датчика протечки под ванной
+  - action: notify.tanya
+    metadata: {}
+    data:
+      message: Сработка датчика протечки под ванной
+  - type: turn_off
+    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+    entity_id: 871d234e83d558a72f943c21ad4fc4f6
+    domain: switch
+  mode: single
+- id: '1787748608395'
+  alias: Датчик протечки под раковиной
+  description: ''
+  triggers:
+  - device_id: bb8a43774c2437a1941875293fe686c2
+    domain: zha
+    type: device_offline
+    subtype: device_offline
+    metadata: {}
+    trigger: device
+  conditions: []
+  actions:
+  - action: notify.denis
+    metadata: {}
+    data:
+      message: Сработка датчика протечки под раковиной
+  - action: notify.tanya
+    metadata: {}
+    data:
+      message: Сработка датчика протечки под раковиной
+  - type: turn_off
+    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+    entity_id: 871d234e83d558a72f943c21ad4fc4f6
+    domain: switch
+  mode: single
+- id: '1789406718654'
+  alias: Вытяжка автоматизация ВЫКЛ
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
+    to: 'off'
+  conditions: []
+  actions:
+  - delay:
+      minutes: 5
+  - action: switch.turn_off
+    target:
+      entity_id: switch.lumi_ctrl_neutral2_v1_180f_right_switch_service
+  mode: restart
+- id: '1789406960089'
+  alias: Вытяжка автоматизация ВЫКЛ
+  description: ''
+  triggers:
+  - type: changed_states
+    device_id: a44e900c191901e2e0fad23eeaf33be5
+    entity_id: 95af3477327a453d4c72594d76632ee2
+    domain: switch
+    metadata:
+      secondary: false
+    trigger: device
+  conditions:
+  - condition: state
+    entity_id: 95af3477327a453d4c72594d76632ee2
+    state: 'off'
+  actions:
+  - delay:
+      minutes: 5
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      device_id: a44e900c191901e2e0fad23eeaf33be5
+    data: {}
+  mode: restart
+- id: '1794977132311'
+  alias: Режим кино
+  description: Включение режима кино голосом через Алису
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи режим кино
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id:
+      - light.lumi_lumi_switch_b2nc01_osveshchenie
+      - light.lumi_lumi_switch_b2nc01_osveshchenie_2
+      - light.lumi_lumi_switch_b2nc01_osveshchenie_3
+      - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie
+      - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_2
+      - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
+  mode: single
+- id: '1794978039429'
+  alias: Включи свет
+  description: Включение света в гостиной голосом через Алису
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи весь свет
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id:
+      - light.lumi_lumi_switch_b2nc01_osveshchenie
+      - light.lumi_lumi_switch_b2nc01_osveshchenie_2
+      - light.lumi_lumi_switch_b2nc01_osveshchenie_3
+      - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie
+      - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_2
+      - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
+  mode: single

@@ -1,0 +1,67 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+xiaomi_miot:
+  username: kurovda@gmail.com
+  password: 8GjblNpd
+  server_country: ru # Location of xiaomi cloud: cn(default), de, i2, ru, sg, tw, us
+  http_timeout: 15   # Timeout (seconds) for requesting the xiaomi apis
+  
+  camera.chuangmi_042a02_8351_camera_control:
+    video_attribute: 1   # https://github.com/al-one/hass-xiaomi-miot/issues/11#issuecomment-773054167
+    keep_streaming: true # Continuously update stream address
+ 
+zha:
+  custom_quirks_path: /config/custom_zha_quirks/
+  
+yandex_station_intents:
+  intents:
+    Включи режим кино:
+      say_phrase: Тащи вкусняшки!
+      extra_phrases:
+        - Время смотреть кинчики
+        - Кинчики
+        - Нокс
+        
+    Включи весь свет:
+      extra_phrases:
+        - Включи свет
+        - Люмос максимум
+        - Люмос
+
+notify:
+  - name: denis
+    platform: telegram
+    chat_id: 299057544
+  - name: tanya
+    platform: telegram
+    chat_id: 310816124
+
+camera:
+  - platform: xiaomi_cloud_map_extractor
+    host: 192.168.0.17
+    token: 5473676b4a6c4c76556c696770307470
+    username: 4169238608
+    password: 8GjblNpd8V6lgA9
+    draw: ['all']
+    attributes:
+      - calibration_points
+      
+logger:
+#   default: info
+  default: warning
+  logs:
+    homeassistant.components.tuya: debug
+    tuya_sharing: debug
+    custom_components.xiaomi_cloud_map_extractor: debug
+    
