@@ -12,7 +12,7 @@
   alias: Уличный свет выкл в полночь
   triggers:
   - trigger: time
-    at: '00:00:00'
+    at: 00:00:00
   actions:
   - action: switch.turn_off
     target:
@@ -239,94 +239,6 @@
         data:
           message: Обнаружена протечка под раковиной
   mode: single
-- id: '1789406718654'
-  alias: Вытяжка на двухканальном выключателе Lumi
-  triggers:
-  - trigger: state
-    entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
-    to: 'on'
-    id: light_on
-  - trigger: state
-    entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
-    to: 'off'
-    id: light_off
-  actions:
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: light_on
-      sequence:
-      - action: switch.turn_on
-        target:
-          entity_id: switch.lumi_ctrl_neutral2_v1_180f_right_switch_service
-    - conditions:
-      - condition: trigger
-        id: light_off
-      sequence:
-      - delay:
-          minutes: 5
-      - condition: state
-        entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
-        state: 'off'
-      - action: switch.turn_off
-        target:
-          entity_id: switch.lumi_ctrl_neutral2_v1_180f_right_switch_service
-  mode: restart
-- id: '1789406960089'
-  alias: Вытяжка на втором двухканальном выключателе
-  triggers:
-  - trigger: device
-    type: turned_on
-    device_id: a44e900c191901e2e0fad23eeaf33be5
-    entity_id: 95af3477327a453d4c72594d76632ee2
-    domain: switch
-    id: light_on
-  - trigger: device
-    type: turned_off
-    device_id: a44e900c191901e2e0fad23eeaf33be5
-    entity_id: 95af3477327a453d4c72594d76632ee2
-    domain: switch
-    id: light_off
-  conditions:
-  - condition: template
-    value_template: >-
-      {{ trigger.entity_id != 'switch.lumi_ctrl_neutral2_v1_180f_left_switch_service' }}
-  actions:
-  - variables:
-      fan_candidates: >-
-        {{ device_entities('a44e900c191901e2e0fad23eeaf33be5')
-           | select('match', '^switch[.]')
-           | reject('eq', trigger.entity_id) | list }}
-  - if:
-    - condition: template
-      value_template: "{{ fan_candidates | count != 1 }}"
-    then:
-    - action: persistent_notification.create
-      data:
-        notification_id: exhaust_fan_entity
-        title: Требуется проверить настройку вытяжки
-        message: Не удалось однозначно определить канал вытяжки на двухканальном выключателе.
-    - stop: Канал вытяжки не определён
-  - choose:
-    - conditions:
-      - condition: trigger
-        id: light_on
-      sequence:
-      - action: switch.turn_on
-        target:
-          entity_id: "{{ fan_candidates[0] }}"
-    - conditions:
-      - condition: trigger
-        id: light_off
-      sequence:
-      - delay:
-          minutes: 5
-      - condition: template
-        value_template: "{{ is_state(trigger.entity_id, 'off') }}"
-      - action: switch.turn_off
-        target:
-          entity_id: "{{ fan_candidates[0] }}"
-  mode: restart
 - id: '1794977132311'
   alias: Режим кино
   description: Включение режима кино голосом через Алису
@@ -364,7 +276,7 @@
       - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_2
       - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
   mode: single
-- id: 'yandex_turn_on_living_room_chandelier'
+- id: yandex_turn_on_living_room_chandelier
   alias: Включи люстру
   triggers:
   - trigger: event
@@ -437,6 +349,7 @@
       area_id: "{{ area_id('Прихожая') }}"
   mode: single
 - id: 'yandex_turn_off_living_room_chandelier'
+- id: yandex_turn_off_living_room_chandelier
   alias: Выключи люстру
   triggers:
   - trigger: event
