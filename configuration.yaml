@@ -31,7 +31,6 @@ zha:
 yandex_station_intents:
   intents:
     Включи режим кино:
-      say_phrase: Тащи вкусняшки!
       extra_phrases:
         - Время смотреть кинчики
         - Кинчики
@@ -42,6 +41,8 @@ yandex_station_intents:
         - Включи свет
         - Люмос максимум
         - Люмос
+    Включи люстру: {}
+    Выключи люстру: {}
 
 camera:
   - platform: xiaomi_cloud_map_extractor

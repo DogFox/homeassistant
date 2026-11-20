@@ -1,63 +1,26 @@
 - id: '1729788712454'
-  alias: Архитектурная и гирлянда подсветка Вкл
-  description: Включаем уличный свет если освещенности ниже 10
+  alias: Уличный свет вкл на закате
   triggers:
-  - type: illuminance
-    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
-    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
-    domain: sensor
-    trigger: device
-    below: 5
-  conditions:
-  - condition: time
-    before: '12:00:00'
-    after: 09:00:00
-    enabled: false
+  - trigger: sun
+    event: sunset
   actions:
   - action: switch.turn_on
-    metadata: {}
-    data: {}
     target:
       entity_id:
       - switch.lumi_acn018_471c_switch_status
       - switch.lumi_acn018_471c_switch_status_3
   mode: single
 - id: '1729788857533'
-  alias: Архитектурный свет и гирлянда Выкл
-  description: Выключаем уличный свет в 24 часа
+  alias: Уличный свет выкл в полночь
   triggers:
-  - type: illuminance
-    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
-    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
-    domain: sensor
-    trigger: device
-    above: 10
   - trigger: time
-    at: '23:00:00'
-  conditions: []
+    at: '00:00:00'
   actions:
   - action: switch.turn_off
-    metadata: {}
-    data: {}
     target:
       entity_id:
       - switch.lumi_acn018_471c_switch_status
       - switch.lumi_acn018_471c_switch_status_3
-  mode: single
-- id: '1733600152141'
-  alias: Выключить гирлянду в 23
-  description: Выключаем уличный свет в 24 часа
-  triggers:
-  - type: illuminance
-    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
-    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
-    domain: sensor
-    trigger: device
-    above: 10
-  - trigger: time
-    at: '23:00:00'
-  conditions: []
-  actions:
   - type: turn_off
     device_id: 14dfaad59948a7ffd60610be2e9ffa22
     entity_id: 82509dec86272ef020197cb142def876
@@ -66,53 +29,6 @@
     device_id: 7d3610704dae1cee88952f3eb412538b
     entity_id: 926e3cfb8d36aae19124c7ab2e207ac2
     domain: switch
-  mode: single
-- id: '1738042134617'
-  alias: ВКЛ Архитектурный свет
-  description: Включаем уличный свет если освещенности ниже 10
-  triggers:
-  - type: illuminance
-    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
-    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
-    domain: sensor
-    trigger: device
-    below: 5
-  - trigger: sun
-    event: sunset
-    offset: 0
-  conditions:
-  - condition: time
-    before: '12:00:00'
-    after: 09:00:00
-    enabled: false
-  actions:
-  - action: switch.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id:
-      - switch.lumi_acn018_471c_switch_status_3
-  mode: single
-- id: '1738042171972'
-  alias: ВЫКЛ Архитектурный свет
-  description: Выключаем уличный свет в 24 часа
-  triggers:
-  - type: illuminance
-    device_id: 4595c6bc4d2610ab8d3c4cc154ed0198
-    entity_id: 0d5734cdc63b0d5c5ec654ffd698d347
-    domain: sensor
-    trigger: device
-    above: 10
-  - trigger: time
-    at: '23:00:00'
-  conditions: []
-  actions:
-  - action: switch.turn_off
-    metadata: {}
-    data: {}
-    target:
-      entity_id:
-      - switch.lumi_acn018_471c_switch_status_3
   mode: single
 - id: '1738830232810'
   alias: Переключить свет
@@ -390,7 +306,6 @@
   - action: light.turn_off
     target:
       entity_id:
-      - light.lumi_lumi_switch_b2nc01_osveshchenie
       - light.lumi_lumi_switch_b2nc01_osveshchenie_2
       - light.lumi_lumi_switch_b2nc01_osveshchenie_3
       - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie
@@ -415,4 +330,28 @@
       - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie
       - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_2
       - light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
+  mode: single
+- id: 'yandex_turn_on_living_room_chandelier'
+  alias: Включи люстру
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи люстру
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id: light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
+  mode: single
+- id: 'yandex_turn_off_living_room_chandelier'
+  alias: Выключи люстру
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Выключи люстру
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
   mode: single
