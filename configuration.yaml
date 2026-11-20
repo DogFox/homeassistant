@@ -2,6 +2,13 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
+homeassistant:
+  customize:
+    camera.chuangmi_042a02_8351_camera_control:
+      video_attribute: 1   # https://github.com/al-one/hass-xiaomi-miot/issues/11#issuecomment-773054167
+      keep_streaming: true # Continuously update stream address
+
+
 # Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
@@ -12,14 +19,11 @@ scene: !include scenes.yaml
 
 
 xiaomi_miot:
-  username: kurovda@gmail.com
-  password: 8GjblNpd
+  username: !secret xiaomi_miot_username
+  password: !secret xiaomi_miot_password
   server_country: ru # Location of xiaomi cloud: cn(default), de, i2, ru, sg, tw, us
   http_timeout: 15   # Timeout (seconds) for requesting the xiaomi apis
   
-  camera.chuangmi_042a02_8351_camera_control:
-    video_attribute: 1   # https://github.com/al-one/hass-xiaomi-miot/issues/11#issuecomment-773054167
-    keep_streaming: true # Continuously update stream address
  
 zha:
   custom_quirks_path: /config/custom_zha_quirks/
@@ -39,20 +43,12 @@ yandex_station_intents:
         - Люмос максимум
         - Люмос
 
-notify:
-  - name: denis
-    platform: telegram
-    chat_id: 299057544
-  - name: tanya
-    platform: telegram
-    chat_id: 310816124
-
 camera:
   - platform: xiaomi_cloud_map_extractor
     host: 192.168.0.17
-    token: 5473676b4a6c4c76556c696770307470
-    username: 4169238608
-    password: 8GjblNpd8V6lgA9
+    token: !secret xiaomi_vacuum_token
+    username: !secret xiaomi_vacuum_username
+    password: !secret xiaomi_vacuum_password
     draw: ['all']
     attributes:
       - calibration_points

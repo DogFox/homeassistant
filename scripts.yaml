@@ -1,1 +1,47 @@
-{}
+leak_turn_off_relay:
+  alias: Отключить реле при протечке
+  fields:
+    location:
+      name: Место протечки
+      required: true
+      selector:
+        text:
+  mode: parallel
+  max: 5
+  sequence:
+  - type: turn_off
+    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+    entity_id: 871d234e83d558a72f943c21ad4fc4f6
+    domain: switch
+    continue_on_error: true
+  - repeat:
+      sequence:
+      - delay:
+          seconds: 1
+      until:
+      - condition: or
+        conditions:
+        - condition: device
+          type: is_off
+          device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+          entity_id: 871d234e83d558a72f943c21ad4fc4f6
+          domain: switch
+        - condition: template
+          value_template: "{{ repeat.index >= 10 }}"
+  - if:
+    - condition: not
+      conditions:
+      - condition: device
+        type: is_off
+        device_id: 45e4a65dfcd6b56a72106759a5ab79a9
+        entity_id: 871d234e83d558a72f943c21ad4fc4f6
+        domain: switch
+    then:
+    - action: persistent_notification.create
+      data:
+        title: Не подтверждено отключение реле при протечке
+        message: "Обнаружена протечка {{ location }}. Проверьте положение крана вручную."
+    - action: telegram_bot.send_message
+      data:
+        chat_id: !secret telegram_household_chat_ids
+        message: "Протечка {{ location }}. Реле не подтвердило отключение, проверьте кран."

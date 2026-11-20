@@ -139,212 +139,244 @@
     to:
     trigger: state
   actions:
-  - action: notify.denis
+  - action: telegram_bot.send_message
     data:
+      chat_id: !secret telegram_household_chat_ids
       message: Мастер выключатель был использован
-      data: {}
-  - action: notify.tanya
-    data:
-      message: Мастер выключатель был использован
-      data: {}
 - id: '1756475470122'
-  alias: Вкл вытяжку со светом
-  description: ''
+  alias: Вытяжка со светом
   triggers:
-  - type: turned_on
+  - trigger: device
+    type: turned_on
     device_id: caef9452b370e68fd0bfdbd03502ae0e
     entity_id: 11c8553a857d658097034165cff3efd6
     domain: switch
-    trigger: device
-  conditions: []
-  actions:
-  - type: turn_on
-    device_id: caef9452b370e68fd0bfdbd03502ae0e
-    entity_id: 21c9cfe8783fd69d740354df9027b688
-    domain: switch
-  mode: single
-- id: '1756475569009'
-  alias: Выкл вытяжку через 5 мин после света
-  description: ''
-  triggers:
-  - type: turned_off
+    id: light_on
+  - trigger: device
+    type: turned_off
     device_id: caef9452b370e68fd0bfdbd03502ae0e
     entity_id: 11c8553a857d658097034165cff3efd6
     domain: switch
-    trigger: device
-  conditions: []
+    id: light_off
   actions:
-  - delay:
-      hours: 0
-      minutes: 5
-      seconds: 0
-      milliseconds: 0
-  - type: turn_off
-    device_id: caef9452b370e68fd0bfdbd03502ae0e
-    entity_id: 21c9cfe8783fd69d740354df9027b688
-    domain: switch
-  mode: single
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: light_on
+      sequence:
+      - type: turn_on
+        device_id: caef9452b370e68fd0bfdbd03502ae0e
+        entity_id: 21c9cfe8783fd69d740354df9027b688
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id: light_off
+      sequence:
+      - delay:
+          minutes: 5
+      - condition: device
+        type: is_off
+        device_id: caef9452b370e68fd0bfdbd03502ae0e
+        entity_id: 11c8553a857d658097034165cff3efd6
+        domain: switch
+      - type: turn_off
+        device_id: caef9452b370e68fd0bfdbd03502ae0e
+        entity_id: 21c9cfe8783fd69d740354df9027b688
+        domain: switch
+  mode: restart
 - id: '1787748510293'
   alias: Датчик протечки под унитазом
-  description: ''
   triggers:
-  - device_id: ba5e3a929461bfce20c90f1df2054f7b
-    domain: zha
-    type: device_offline
-    subtype: device_offline
-    metadata: {}
-    trigger: device
-  conditions: []
+  - trigger: template
+    value_template: >-
+      {{ expand(device_entities('45e4a65dfcd6b56a72106759a5ab79a9'))
+          | selectattr('entity_id', 'match', '^binary_sensor[.]')
+          | selectattr('attributes.device_class', 'defined')
+          | selectattr('attributes.device_class', 'eq', 'moisture')
+          | selectattr('state', 'eq', 'on') | list | count > 0 }}
   actions:
-  - action: notify.denis
-    metadata: {}
-    data:
-      message: Сработка датчика протечки под унитазом
-  - action: notify.tanya
-    metadata: {}
-    data:
-      message: Сработка датчика протечки под унитазом
-  - type: turn_off
-    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
-    entity_id: 871d234e83d558a72f943c21ad4fc4f6
-    domain: switch
+  - parallel:
+    - sequence:
+      - action: script.leak_turn_off_relay
+        data:
+          location: под унитазом
+    - sequence:
+      - action: telegram_bot.send_message
+        data:
+          chat_id: !secret telegram_household_chat_ids
+          message: Обнаружена протечка под унитазом
   mode: single
 - id: '1787748563428'
-  alias: Датчик протечки котельной
-  description: ''
+  alias: Датчик протечки в котельной
   triggers:
-  - type: moist
+  - trigger: device
+    type: moist
+    domain: binary_sensor
     device_id: 9ebb055c16a78fcdc35543130a2f94ce
     entity_id: 0bfb8af87baf8fbadea707177e735632
-    domain: binary_sensor
-    trigger: device
-  conditions: []
   actions:
-  - action: notify.denis
-    metadata: {}
-    data:
-      message: Сработка датчика протечки в котельной
-  - action: notify.tanya
-    metadata: {}
-    data:
-      message: Сработка датчика протечки котельной
-  - type: turn_off
-    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
-    entity_id: 871d234e83d558a72f943c21ad4fc4f6
-    domain: switch
+  - parallel:
+    - sequence:
+      - action: script.leak_turn_off_relay
+        data:
+          location: в котельной
+    - sequence:
+      - action: telegram_bot.send_message
+        data:
+          chat_id: !secret telegram_household_chat_ids
+          message: Обнаружена протечка в котельной
   mode: single
 - id: '1787748578071'
   alias: Датчик протечки на кухне
-  description: ''
   triggers:
-  - device_id: 2aedcdb52827506b3ac8b1f4fd62a486
-    domain: zha
-    type: device_offline
-    subtype: device_offline
-    metadata: {}
-    trigger: device
-  conditions: []
+  - trigger: template
+    value_template: >-
+      {{ expand(device_entities('45e4a65dfcd6b56a72106759a5ab79a9'))
+          | selectattr('entity_id', 'match', '^binary_sensor[.]')
+          | selectattr('attributes.device_class', 'defined')
+          | selectattr('attributes.device_class', 'eq', 'moisture')
+          | selectattr('state', 'eq', 'on') | list | count > 0 }}
   actions:
-  - action: notify.denis
-    metadata: {}
-    data:
-      message: Сработка датчика протечки на кухне
-  - action: notify.tanya
-    metadata: {}
-    data:
-      message: Сработка датчика протечки на кухне
-  - type: turn_off
-    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
-    entity_id: 871d234e83d558a72f943c21ad4fc4f6
-    domain: switch
+  - parallel:
+    - sequence:
+      - action: script.leak_turn_off_relay
+        data:
+          location: на кухне
+    - sequence:
+      - action: telegram_bot.send_message
+        data:
+          chat_id: !secret telegram_household_chat_ids
+          message: Обнаружена протечка на кухне
   mode: single
 - id: '1787748593427'
   alias: Датчик протечки под ванной
-  description: ''
   triggers:
-  - type: moist
+  - trigger: device
+    type: moist
+    domain: binary_sensor
     device_id: 0e736b1a32c8779fdd3280f0336da661
     entity_id: 09b89103e93aa2b1f33350fdbb9c3d27
-    domain: binary_sensor
-    trigger: device
-  conditions: []
   actions:
-  - action: notify.denis
-    metadata: {}
-    data:
-      message: Сработка датчика протечки под ванной
-  - action: notify.tanya
-    metadata: {}
-    data:
-      message: Сработка датчика протечки под ванной
-  - type: turn_off
-    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
-    entity_id: 871d234e83d558a72f943c21ad4fc4f6
-    domain: switch
+  - parallel:
+    - sequence:
+      - action: script.leak_turn_off_relay
+        data:
+          location: под ванной
+    - sequence:
+      - action: telegram_bot.send_message
+        data:
+          chat_id: !secret telegram_household_chat_ids
+          message: Обнаружена протечка под ванной
   mode: single
 - id: '1787748608395'
   alias: Датчик протечки под раковиной
-  description: ''
   triggers:
-  - device_id: bb8a43774c2437a1941875293fe686c2
-    domain: zha
-    type: device_offline
-    subtype: device_offline
-    metadata: {}
-    trigger: device
-  conditions: []
+  - trigger: template
+    value_template: >-
+      {{ expand(device_entities('45e4a65dfcd6b56a72106759a5ab79a9'))
+          | selectattr('entity_id', 'match', '^binary_sensor[.]')
+          | selectattr('attributes.device_class', 'defined')
+          | selectattr('attributes.device_class', 'eq', 'moisture')
+          | selectattr('state', 'eq', 'on') | list | count > 0 }}
   actions:
-  - action: notify.denis
-    metadata: {}
-    data:
-      message: Сработка датчика протечки под раковиной
-  - action: notify.tanya
-    metadata: {}
-    data:
-      message: Сработка датчика протечки под раковиной
-  - type: turn_off
-    device_id: 45e4a65dfcd6b56a72106759a5ab79a9
-    entity_id: 871d234e83d558a72f943c21ad4fc4f6
-    domain: switch
+  - parallel:
+    - sequence:
+      - action: script.leak_turn_off_relay
+        data:
+          location: под раковиной
+    - sequence:
+      - action: telegram_bot.send_message
+        data:
+          chat_id: !secret telegram_household_chat_ids
+          message: Обнаружена протечка под раковиной
   mode: single
 - id: '1789406718654'
-  alias: Вытяжка автоматизация ВЫКЛ
-  description: ''
+  alias: Вытяжка на двухканальном выключателе Lumi
   triggers:
   - trigger: state
     entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
+    to: 'on'
+    id: light_on
+  - trigger: state
+    entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
     to: 'off'
-  conditions: []
+    id: light_off
   actions:
-  - delay:
-      minutes: 5
-  - action: switch.turn_off
-    target:
-      entity_id: switch.lumi_ctrl_neutral2_v1_180f_right_switch_service
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: light_on
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.lumi_ctrl_neutral2_v1_180f_right_switch_service
+    - conditions:
+      - condition: trigger
+        id: light_off
+      sequence:
+      - delay:
+          minutes: 5
+      - condition: state
+        entity_id: switch.lumi_ctrl_neutral2_v1_180f_left_switch_service
+        state: 'off'
+      - action: switch.turn_off
+        target:
+          entity_id: switch.lumi_ctrl_neutral2_v1_180f_right_switch_service
   mode: restart
 - id: '1789406960089'
-  alias: Вытяжка автоматизация ВЫКЛ
-  description: ''
+  alias: Вытяжка на втором двухканальном выключателе
   triggers:
-  - type: changed_states
+  - trigger: device
+    type: turned_on
     device_id: a44e900c191901e2e0fad23eeaf33be5
     entity_id: 95af3477327a453d4c72594d76632ee2
     domain: switch
-    metadata:
-      secondary: false
-    trigger: device
-  conditions:
-  - condition: state
+    id: light_on
+  - trigger: device
+    type: turned_off
+    device_id: a44e900c191901e2e0fad23eeaf33be5
     entity_id: 95af3477327a453d4c72594d76632ee2
-    state: 'off'
+    domain: switch
+    id: light_off
+  conditions:
+  - condition: template
+    value_template: >-
+      {{ trigger.entity_id != 'switch.lumi_ctrl_neutral2_v1_180f_left_switch_service' }}
   actions:
-  - delay:
-      minutes: 5
-  - action: switch.turn_off
-    metadata: {}
-    target:
-      device_id: a44e900c191901e2e0fad23eeaf33be5
-    data: {}
+  - variables:
+      fan_candidates: >-
+        {{ device_entities('a44e900c191901e2e0fad23eeaf33be5')
+           | select('match', '^switch[.]')
+           | reject('eq', trigger.entity_id) | list }}
+  - if:
+    - condition: template
+      value_template: "{{ fan_candidates | count != 1 }}"
+    then:
+    - action: persistent_notification.create
+      data:
+        notification_id: exhaust_fan_entity
+        title: Требуется проверить настройку вытяжки
+        message: Не удалось однозначно определить канал вытяжки на двухканальном выключателе.
+    - stop: Канал вытяжки не определён
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: light_on
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: "{{ fan_candidates[0] }}"
+    - conditions:
+      - condition: trigger
+        id: light_off
+      sequence:
+      - delay:
+          minutes: 5
+      - condition: template
+        value_template: "{{ is_state(trigger.entity_id, 'off') }}"
+      - action: switch.turn_off
+        target:
+          entity_id: "{{ fan_candidates[0] }}"
   mode: restart
 - id: '1794977132311'
   alias: Режим кино
