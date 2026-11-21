@@ -6,9 +6,7 @@
   actions:
   - action: switch.turn_on
     target:
-      entity_id:
-      - switch.lumi_acn018_471c_switch_status
-      - switch.lumi_acn018_471c_switch_status_3
+      entity_id: switch.lumi_acn018_471c_switch_status_3
   mode: single
 - id: '1729788857533'
   alias: Уличный свет выкл в полночь
@@ -18,9 +16,38 @@
   actions:
   - action: switch.turn_off
     target:
-      entity_id:
-      - switch.lumi_acn018_471c_switch_status
-      - switch.lumi_acn018_471c_switch_status_3
+      entity_id: switch.lumi_acn018_471c_switch_status_3
+  mode: single
+- id: outdoor_garlands_on
+  alias: Уличные гирлянды вкл на закате зимой
+  triggers:
+  - trigger: sun
+    event: sunset
+  conditions:
+  - condition: template
+    value_template: "{{ now().month in (12, 1, 2) }}"
+  actions:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.lumi_acn018_471c_switch_status
+  - type: turn_on
+    device_id: 14dfaad59948a7ffd60610be2e9ffa22
+    entity_id: 82509dec86272ef020197cb142def876
+    domain: switch
+  - type: turn_on
+    device_id: 7d3610704dae1cee88952f3eb412538b
+    entity_id: 926e3cfb8d36aae19124c7ab2e207ac2
+    domain: switch
+  mode: single
+- id: '1733600152141'
+  alias: Уличные гирлянды выкл в полночь
+  triggers:
+  - trigger: time
+    at: '00:00:00'
+  actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.lumi_acn018_471c_switch_status
   - type: turn_off
     device_id: 14dfaad59948a7ffd60610be2e9ffa22
     entity_id: 82509dec86272ef020197cb142def876
@@ -348,6 +375,66 @@
   - action: light.turn_on
     target:
       entity_id: light.gostinaia_vykliuchatel_sveta_v_gostinnoi_osveshchenie_3
+  mode: single
+- id: yandex_turn_on_bedroom_lights
+  alias: Включи свет в спальне
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи свет в спальне
+  conditions:
+  - condition: template
+    value_template: "{{ area_id('Спальня') is not none }}"
+  actions:
+  - action: light.turn_on
+    target:
+      area_id: "{{ area_id('Спальня') }}"
+  mode: single
+- id: yandex_turn_off_bedroom_lights
+  alias: Выключи свет в спальне
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Выключи свет в спальне
+  conditions:
+  - condition: template
+    value_template: "{{ area_id('Спальня') is not none }}"
+  actions:
+  - action: light.turn_off
+    target:
+      area_id: "{{ area_id('Спальня') }}"
+  mode: single
+- id: yandex_turn_on_hallway_lights
+  alias: Включи прихожую
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Включи прихожую
+  conditions:
+  - condition: template
+    value_template: "{{ area_id('Прихожая') is not none }}"
+  actions:
+  - action: light.turn_on
+    target:
+      area_id: "{{ area_id('Прихожая') }}"
+  mode: single
+- id: yandex_turn_off_hallway_lights
+  alias: Выключи прихожую
+  triggers:
+  - trigger: event
+    event_type: yandex_intent
+    event_data:
+      text: Выключи прихожую
+  conditions:
+  - condition: template
+    value_template: "{{ area_id('Прихожая') is not none }}"
+  actions:
+  - action: light.turn_off
+    target:
+      area_id: "{{ area_id('Прихожая') }}"
   mode: single
 - id: 'yandex_turn_off_living_room_chandelier'
   alias: Выключи люстру
