@@ -325,13 +325,16 @@
     event_type: yandex_intent
     event_data:
       text: Включи прихожую
+  variables:
+    hallway_third_lights: >-
+      {{ area_entities('Прихожая') | select('match', '^light[.].+_3$') | list }}
   conditions:
   - condition: template
-    value_template: "{{ area_id('Прихожая') is not none }}"
+    value_template: "{{ hallway_third_lights | count == 1 }}"
   actions:
   - action: light.turn_on
     target:
-      area_id: "{{ area_id('Прихожая') }}"
+      entity_id: "{{ hallway_third_lights[0] }}"
   mode: single
 - id: yandex_turn_off_hallway_lights
   alias: Выключи прихожую
